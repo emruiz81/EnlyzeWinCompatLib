@@ -62,10 +62,13 @@ LibGetFileSizeEx(HANDLE hFile, PLARGE_INTEGER lpFileSize)
 {
     if (!pfnGetFileSizeEx)
     {
-        // Check if the API is provided by kernel32, otherwise fall back to our implementation.
         HMODULE hKernel32 = GetModuleHandleW(L"kernel32");
-        pfnGetFileSizeEx = reinterpret_cast<PFN_GETFILESIZEEX>(GetProcAddress(hKernel32, "GetFileSizeEx"));
-        if (!pfnGetFileSizeEx)
+        FARPROC proc = GetProcAddress(hKernel32, "GetFileSizeEx");
+        if (proc)
+        {
+            pfnGetFileSizeEx = reinterpret_cast<PFN_GETFILESIZEEX>(reinterpret_cast<intptr_t>(proc));
+        }
+        else
         {
             pfnGetFileSizeEx = _CompatGetFileSizeEx;
         }
@@ -81,8 +84,12 @@ LibInitializeCriticalSectionAndSpinCount(LPCRITICAL_SECTION lpCriticalSection, D
     {
         // Check if the API is provided by kernel32, otherwise fall back to our implementation.
         HMODULE hKernel32 = GetModuleHandleW(L"kernel32");
-        pfnInitializeCriticalSectionAndSpinCount = reinterpret_cast<PFN_INITIALIZECRITICALSECTIONANDSPINCOUNT>(GetProcAddress(hKernel32, "InitializeCriticalSectionAndSpinCount"));
-        if (!pfnInitializeCriticalSectionAndSpinCount)
+        FARPROC proc = GetProcAddress(hKernel32, "InitializeCriticalSectionAndSpinCount");
+        if (proc)
+        {
+            pfnInitializeCriticalSectionAndSpinCount = reinterpret_cast<PFN_INITIALIZECRITICALSECTIONANDSPINCOUNT>(reinterpret_cast<intptr_t>(proc));
+        }
+        else
         {
             pfnInitializeCriticalSectionAndSpinCount = _CompatInitializeCriticalSectionAndSpinCount;
         }
@@ -96,10 +103,13 @@ LibSetFilePointerEx(HANDLE hFile, LARGE_INTEGER liDistanceToMove, PLARGE_INTEGER
 {
     if (!pfnSetFilePointerEx)
     {
-        // Check if the API is provided by kernel32, otherwise fall back to our implementation.
         HMODULE hKernel32 = GetModuleHandleW(L"kernel32");
-        pfnSetFilePointerEx = reinterpret_cast<PFN_SETFILEPOINTEREX>(GetProcAddress(hKernel32, "SetFilePointerEx"));
-        if (!pfnSetFilePointerEx)
+        FARPROC proc = GetProcAddress(hKernel32, "SetFilePointerEx");
+        if (proc)
+        {
+            pfnSetFilePointerEx = reinterpret_cast<PFN_SETFILEPOINTEREX>(reinterpret_cast<intptr_t>(proc));
+        }
+        else
         {
             pfnSetFilePointerEx = _CompatSetFilePointerEx;
         }

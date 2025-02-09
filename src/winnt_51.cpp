@@ -32,10 +32,13 @@ LibDecodePointer(PVOID Ptr)
 {
     if (!pfnDecodePointer)
     {
-        // Check if the API is provided by kernel32, otherwise fall back to our implementation.
         HMODULE hKernel32 = GetModuleHandleW(L"kernel32");
-        pfnDecodePointer = reinterpret_cast<PFN_DECODEPOINTER>(GetProcAddress(hKernel32, "DecodePointer"));
-        if (!pfnDecodePointer)
+        FARPROC proc = GetProcAddress(hKernel32, "DecodePointer");
+        if (proc)
+        {
+            pfnDecodePointer = reinterpret_cast<PFN_DECODEPOINTER>(reinterpret_cast<intptr_t>(proc));
+        }
+        else
         {
             pfnDecodePointer = _CompatDecodePointer;
         }
@@ -49,10 +52,13 @@ LibEncodePointer(PVOID Ptr)
 {
     if (!pfnEncodePointer)
     {
-        // Check if the API is provided by kernel32, otherwise fall back to our implementation.
         HMODULE hKernel32 = GetModuleHandleW(L"kernel32");
-        pfnEncodePointer = reinterpret_cast<PFN_ENCODEPOINTER>(GetProcAddress(hKernel32, "EncodePointer"));
-        if (!pfnEncodePointer)
+        FARPROC proc = GetProcAddress(hKernel32, "EncodePointer");
+        if (proc)
+        {
+            pfnEncodePointer = reinterpret_cast<PFN_ENCODEPOINTER>(reinterpret_cast<intptr_t>(proc));
+        }
+        else
         {
             pfnEncodePointer = _CompatEncodePointer;
         }

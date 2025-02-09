@@ -173,14 +173,17 @@ _CompatInterlockedPushEntrySList(PCOMPAT_SLIST_HEADER ListHead, PCOMPAT_SLIST_EN
 }
 
 extern "C" BOOL WINAPI
-LibGetModuleHandleExW(DWORD dwFlags, LPCWSTR lpModuleName, HMODULE * phModule)
+LibGetModuleHandleExW(DWORD dwFlags, LPCWSTR lpModuleName, HMODULE* phModule)
 {
     if (!pfnGetModuleHandleExW)
     {
-        // Check if the API is provided by kernel32, otherwise fall back to our implementation.
         HMODULE hKernel32 = GetModuleHandleW(L"kernel32");
-        pfnGetModuleHandleExW = reinterpret_cast<PFN_GETMODULEHANDLEEXW>(GetProcAddress(hKernel32, "GetModuleHandleExW"));
-        if (!pfnGetModuleHandleExW)
+        FARPROC proc = GetProcAddress(hKernel32, "GetModuleHandleExW");
+        if (proc)
+        {
+            pfnGetModuleHandleExW = reinterpret_cast<PFN_GETMODULEHANDLEEXW>(reinterpret_cast<intptr_t>(proc));
+        }
+        else
         {
             pfnGetModuleHandleExW = _CompatGetModuleHandleExW;
         }
@@ -194,10 +197,13 @@ LibHeapQueryInformation(HANDLE HeapHandle, HEAP_INFORMATION_CLASS HeapInformatio
 {
     if (!pfnHeapQueryInformation)
     {
-        // Check if the API is provided by kernel32, otherwise fall back to our implementation.
         HMODULE hKernel32 = GetModuleHandleW(L"kernel32");
-        pfnHeapQueryInformation = reinterpret_cast<PFN_HEAPQUERYINFORMATION>(GetProcAddress(hKernel32, "HeapQueryInformation"));
-        if (!pfnHeapQueryInformation)
+        FARPROC proc = GetProcAddress(hKernel32, "HeapQueryInformation");
+        if (proc)
+        {
+            pfnHeapQueryInformation = reinterpret_cast<PFN_HEAPQUERYINFORMATION>(reinterpret_cast<intptr_t>(proc));
+        }
+        else
         {
             pfnHeapQueryInformation = _CompatHeapQueryInformation;
         }
@@ -211,10 +217,13 @@ LibInitializeSListHead(PCOMPAT_SLIST_HEADER ListHead)
 {
     if (!pfnInitializeSListHead)
     {
-        // Check if the API is provided by kernel32, otherwise fall back to our implementation.
         HMODULE hKernel32 = GetModuleHandleW(L"kernel32");
-        pfnInitializeSListHead = reinterpret_cast<PFN_INITIALIZESLISTHEAD>(GetProcAddress(hKernel32, "InitializeSListHead"));
-        if (!pfnInitializeSListHead)
+        FARPROC proc = GetProcAddress(hKernel32, "InitializeSListHead");
+        if (proc)
+        {
+            pfnInitializeSListHead = reinterpret_cast<PFN_INITIALIZESLISTHEAD>(reinterpret_cast<intptr_t>(proc));
+        }
+        else
         {
             pfnInitializeSListHead = _CompatInitializeSListHead;
         }
@@ -228,10 +237,13 @@ LibInterlockedFlushSList(PCOMPAT_SLIST_HEADER ListHead)
 {
     if (!pfnInterlockedFlushSList)
     {
-        // Check if the API is provided by kernel32, otherwise fall back to our implementation.
         HMODULE hKernel32 = GetModuleHandleW(L"kernel32");
-        pfnInterlockedFlushSList = reinterpret_cast<PFN_INTERLOCKEDFLUSHSLIST>(GetProcAddress(hKernel32, "InterlockedFlushSList"));
-        if (!pfnInterlockedFlushSList)
+        FARPROC proc = GetProcAddress(hKernel32, "InterlockedFlushSList");
+        if (proc)
+        {
+            pfnInterlockedFlushSList = reinterpret_cast<PFN_INTERLOCKEDFLUSHSLIST>(reinterpret_cast<intptr_t>(proc));
+        }
+        else
         {
             pfnInterlockedFlushSList = _CompatInterlockedFlushSList;
         }
@@ -245,10 +257,13 @@ LibInterlockedPushEntrySList(PCOMPAT_SLIST_HEADER ListHead, PCOMPAT_SLIST_ENTRY 
 {
     if (!pfnInterlockedPushEntrySList)
     {
-        // Check if the API is provided by kernel32, otherwise fall back to our implementation.
         HMODULE hKernel32 = GetModuleHandleW(L"kernel32");
-        pfnInterlockedPushEntrySList = reinterpret_cast<PFN_INTERLOCKEDPUSHENTRYSLIST>(GetProcAddress(hKernel32, "InterlockedPushEntrySList"));
-        if (!pfnInterlockedPushEntrySList)
+        FARPROC proc = GetProcAddress(hKernel32, "InterlockedPushEntrySList");
+        if (proc)
+        {
+            pfnInterlockedPushEntrySList = reinterpret_cast<PFN_INTERLOCKEDPUSHENTRYSLIST>(reinterpret_cast<intptr_t>(proc));
+        }
+        else
         {
             pfnInterlockedPushEntrySList = _CompatInterlockedPushEntrySList;
         }
